@@ -7,8 +7,23 @@ import com.bradyrussell.uiscoin.script.ScriptOperator;
 
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
+    public static void setLevel(Level targetLevel) {
+        Logger root = Logger.getLogger("");
+        root.setLevel(targetLevel);
+        for (Handler handler : root.getHandlers()) {
+            handler.setLevel(targetLevel);
+        }
+    }
+
+    static {
+        System.setProperty("java.util.logging.SimpleFormatter.format",
+                "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n");
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -16,8 +31,13 @@ public class Main {
         String InputScript;
 
         if(args.length == 0){
-            System.out.println("Please enter a script either in text or base64: ");
+            System.out.println("Please enter a script either in text or base64, or type j to enter JIT mode: ");
             InputScript = scanner.nextLine();
+
+            if(InputScript.strip().equalsIgnoreCase("J")) {
+                JIT.main(new String[]{});
+                return;
+            }
         } else {
             InputScript = args[0];
         }
